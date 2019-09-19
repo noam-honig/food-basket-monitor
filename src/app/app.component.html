@@ -10,7 +10,7 @@
     <div style="width:100%;text-align: center">
       
     </div>
-    <h4 *ngIf="context.isSignedIn()">Hello {{context.user.name}}</h4>
+    <h4 *ngIf="context.isSignedIn()">שלום {{context.user.name}}</h4>
     <mat-nav-list role="list">
       <ng-container *ngFor="let m of router.config">
         <mat-list-item *ngIf="shouldDisplayRoute(m)" routerLinkActive="active-route">

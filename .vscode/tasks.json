@@ -30,7 +30,6 @@
                 "$tsc"
             ]
         },
-       
         {
             "type": "npm",
             "script": "server:build",
@@ -38,7 +37,6 @@
                 "$tsc"
             ]
         },
-      
         {
             "type": "npm",
             "script": "server:execute",
@@ -57,6 +55,11 @@
                 "group": "groupA"
             },
             "isBackground": true
+        },
+        {
+            "type": "npm",
+            "script": "ng-serve",
+            "problemMatcher": []
         }
     ]
 }

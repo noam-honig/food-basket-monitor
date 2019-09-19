@@ -12,7 +12,7 @@
     "server:build": "tsc -p tsconfig.server.json",
     "server:build-watch": "tsc -p tsconfig.server.json --watch",
     "server:execute": "node dist-server/server/server.js",
-    "server:debug": "node --inspect --debug-brk dist-server/radweb-starterkit/src/app/server/server.js",
+    "server:debug": "node --inspect --debug-brk dist-server/server/server.js",
     "RunSomething": "node --inspect --debug-brk dist-server/server/doSomething.js",
     "test": "ng test",
     "lint": "ng lint",
@@ -56,8 +56,7 @@
     "zone.js": "~0.8.26",
     "radweb": "^3.0.11",
     "radweb-server": "^3.0.4",
-    "radweb-server-postgres": "^3.0.1",
-    
+    "radweb-server-postgres": "^3.0.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.0",
