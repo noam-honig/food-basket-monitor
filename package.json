@@ -14,6 +14,7 @@
     "server:execute": "node dist-server/server/server.js",
     "server:debug": "node --inspect --debug-brk dist-server/server/server.js",
     "RunSomething": "node --inspect --debug-brk dist-server/server/doSomething.js",
+    "publish-to-heroku": "git push fbd-monitor master -f",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
