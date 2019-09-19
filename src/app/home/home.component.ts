@@ -55,8 +55,17 @@ export class HomeComponent implements OnInit {
     allowDelete: true,
     allowInsert: true,
     hideDataArea: true,
+    knowTotalRows:true,
     get: {
-      limit: 100
+      limit: 100,
+      orderBy: s => [{ column: s.deliveries, descending: true }]
+    },
+    rowCssClass: s => {
+      if (s.loading.value)
+        return 'warning';
+      if (s.connections.value > 10)
+        return 'error';
+      return '';
     },
     columnSettings: s => [
       { column: s.name, readonly: true },
@@ -74,6 +83,20 @@ export class HomeComponent implements OnInit {
     this.toDate.value = new Date();
     this.refresh();
 
+  }
+  totalFamilies() {
+    let r = 0;
+    for (let f of this.sites.items) {
+      r += f.families.value;
+    }
+    return r;
+  }
+  totalDeliveries() {
+    let r = 0;
+    for (let f of this.sites.items) {
+      r += f.deliveries.value;
+    }
+    return r;
   }
   @RunOnServer({ allowed: Roles.admin })
   static async  refreshSiteInfo(fromDate: string, toDate: string, context?: Context) {
@@ -102,7 +125,7 @@ export class HomeComponent implements OnInit {
           s.loading.value = false;
           await s.save();
         });
-      } catch (err) { 
+      } catch (err) {
         console.error(err);
       }
 
