@@ -93,11 +93,15 @@ export class HomeComponent implements OnInit {
         return 'error';
       return '';
     },
+    numOfColumnsInGrid:7,
     columnSettings: s => [
-      { column: s.name, readonly: true },
+      { column: s.name, readonly: true,width:'120' },
       { column: s.deliveries, readonly: true, width: '60' },
-      { column: s.families, readonly: true, width: '100' },
-      { column: s.connections, readonly: true, width: '90' },
+      { column: s.onTheWay, readonly: true, width: '60' },
+      { column: s.helpers, readonly: true, width: '60' },
+      { column: s.families, readonly: true, width: '60' },
+      { column: s.connections, readonly: true, width: '60' },
+      { column: s.allFamilies, readonly: true, width: '90' },
       { column: s.lastUpdate, readonly: true, width: '170' },
       { column: s.errorMessage, readonly: true, width: '170' },
       { column: s.loading, readonly: true, width: '170' },

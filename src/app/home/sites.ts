@@ -10,8 +10,8 @@ export class Sites extends IdEntity<IdColumn> {
     toDate = new DateColumn("עד תאריך");
     loading = new BoolColumn("בטעינה");
     name = new StringColumn("שם");
-    connections = new NumberColumn("connections");
-    families = new NumberColumn("משפחות באירוע");
+    connections = new NumberColumn("db");
+    families = new NumberColumn("באירוע");
     allFamilies = new NumberColumn("כל המשפחות");
     helpers = new NumberColumn("מתנדבים");
     onTheWay = new NumberColumn("בדרך");
