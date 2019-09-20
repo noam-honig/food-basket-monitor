@@ -54,19 +54,21 @@ export class HomeComponent implements OnInit {
     this.initTotals();
     let loading = false;
     for (const site of rows.items) {
-      this.totals.deliveries += site.deliveries.value;
-      this.totals.familiesInEvent += site.families.value;
-      this.totals.helpers += site.helpers.value;
-      this.totals.onTheWay += site.onTheWay.value;
-      this.totals.totalFamilies += site.allFamilies.value;
-      if (site.connections.value > 10) {
-        this.totals.dbConnections = site.connections.value;
-        this.totals.name = site.name.value;
-      }
+
 
 
       if (site.loading.value) {
         loading = true;
+      } else {
+        this.totals.deliveries += site.deliveries.value;
+        this.totals.familiesInEvent += site.families.value;
+        this.totals.helpers += site.helpers.value;
+        this.totals.onTheWay += site.onTheWay.value;
+        this.totals.totalFamilies += site.allFamilies.value;
+        if (site.connections.value > 10) {
+          this.totals.dbConnections = site.connections.value;
+          this.totals.name = site.name.value;
+        }
       }
     }
     if (loading)
@@ -93,9 +95,9 @@ export class HomeComponent implements OnInit {
         return 'error';
       return '';
     },
-    numOfColumnsInGrid:7,
+    numOfColumnsInGrid: 7,
     columnSettings: s => [
-      { column: s.name, readonly: true,width:'120' },
+      { column: s.name, readonly: true, width: '120' },
       { column: s.deliveries, readonly: true, width: '60' },
       { column: s.onTheWay, readonly: true, width: '60' },
       { column: s.helpers, readonly: true, width: '60' },
