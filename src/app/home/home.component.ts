@@ -3,7 +3,6 @@ import { RunOnServer, DateColumn, DataAreaSettings } from 'radweb';
 import { Context } from 'radweb';
 import { Roles } from '../users/roles';
 import { Sites, monitorResult } from './sites';
-import * as fetch from 'node-fetch';
 var fullDayValue = 24 * 60 * 60 * 1000;
 
 
@@ -17,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private context: Context) {
     let today = new Date();
-
+    this.initTotals();
     this.fromDate.value = new Date(today.getFullYear(), today.getMonth(), 1);
     this.toDate.value = this.getEndOfMonth();
   }
@@ -32,21 +31,48 @@ export class HomeComponent implements OnInit {
     }
   });
   async refresh() {
-    await HomeComponent.refreshSiteInfo(this.fromDate.rawValue, this.toDate.rawValue);
+    await Sites.refreshSiteInfo(this.fromDate.rawValue, this.toDate.rawValue);
     this.refreshGrid();
 
   };
-  async refreshGrid() {
-    let rows = await this.sites.getRecords();
+  totals: monitorResult;
+  initTotals() {
+    this.totals = {
+      dbConnections: 0,
+      deliveries: 0,
+      familiesInEvent: 0,
+      helpers: 0,
+      name: '',
+      onTheWay: 0,
+      totalFamilies: 0
+    };
+  }
 
+  async refreshGrid() {
+
+    let rows = await this.sites.getRecords();
+    this.initTotals();
+    let loading = false;
     for (const site of rows.items) {
+      this.totals.deliveries += site.deliveries.value;
+      this.totals.familiesInEvent += site.families.value;
+      this.totals.helpers += site.helpers.value;
+      this.totals.onTheWay += site.onTheWay.value;
+      this.totals.totalFamilies += site.allFamilies.value;
+      if (site.connections.value > 10) {
+        this.totals.dbConnections = site.connections.value;
+        this.totals.name = site.name.value;
+      }
+
+
       if (site.loading.value) {
-        setTimeout(() => {
-          this.refreshGrid();
-        }, 1000);
-        return;
+        loading = true;
       }
     }
+    if (loading)
+      setTimeout(() => {
+        this.refreshGrid();
+      }, 1000);
 
   }
 
@@ -55,7 +81,7 @@ export class HomeComponent implements OnInit {
     allowDelete: true,
     allowInsert: true,
     hideDataArea: true,
-    knowTotalRows:true,
+    knowTotalRows: true,
     get: {
       limit: 100,
       orderBy: s => [{ column: s.deliveries, descending: true }]
@@ -84,53 +110,8 @@ export class HomeComponent implements OnInit {
     this.refresh();
 
   }
-  totalFamilies() {
-    let r = 0;
-    for (let f of this.sites.items) {
-      r += f.families.value;
-    }
-    return r;
-  }
-  totalDeliveries() {
-    let r = 0;
-    for (let f of this.sites.items) {
-      r += f.deliveries.value;
-    }
-    return r;
-  }
-  @RunOnServer({ allowed: Roles.admin })
-  static async  refreshSiteInfo(fromDate: string, toDate: string, context?: Context) {
 
-    for (const s of (await context.for(Sites).find({}))) {
-      s.loading.value = true;
-      await s.save();
-      try {
-        fetch.default(s.url.value + "/monitor-report?fromdate=" + fromDate + "&todate=" + toDate, {
-          headers: {
-            "Authorization": process.env.MONITOR_KEY
-          }
-        }).then(x => x.json()).then(async (r: monitorResult) => {
-          s.fromDate.rawValue = fromDate;
-          s.toDate.rawValue = toDate;
-          s.connections.value = r.dbConnections;
-          s.families.value = r.familiesInEvent;
-          s.deliveries.value = r.deliveries;
-          s.loading.value = false;
-          s.lastUpdate.value = new Date();
-          s.name.value = r.name;
-          s.errorMessage.value = '';
-          await s.save();
-        }).catch(async err => {
-          s.errorMessage.value = err;
-          s.loading.value = false;
-          await s.save();
-        });
-      } catch (err) {
-        console.error(err);
-      }
 
-    }
-  }
   next() {
     this.setRange(+1);
   }
@@ -165,7 +146,8 @@ export class HomeComponent implements OnInit {
 
   isAdmin() { return this.context.isAllowed(Roles.admin); }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.refresh();
   }
   clickMe() {
     HomeComponent.test();

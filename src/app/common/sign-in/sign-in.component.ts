@@ -24,7 +24,7 @@ export class SignInComponent implements OnInit {
   async signIn() {
     if (this.canceling)
       return;
-    if (!this.user || this.user.length < 2 || !(await this.authService.setToken(await ServerSignIn.signIn(this.user, this.password)))) {
+    if (!this.user || this.user.length < 2 || !(await this.authService.setToken(await ServerSignIn.signIn(this.user, this.password), true))) {
       this.dialog.YesNoQuestion("Invalid sign in information");
     }
     else

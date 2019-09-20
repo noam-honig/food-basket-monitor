@@ -1,13 +1,25 @@
 <div *ngIf="isAdmin()">
   <mat-card>
-      <h4>
-          ארגונים {{sites.totalRows}}
-        </h4>
+    <h3 class="error" *ngIf="totals.dbConnections">
+      יותר מידי חיבורים פתוחים - {{totals.name}} - {{totals.dbConnections}}
+    </h3>
     <h4>
-      סה"כ משלוחים {{totalDeliveries()}}
+      ארגונים {{sites.totalRows}}
     </h4>
     <h4>
-      סה"כ משפחות באירוע {{totalFamilies()}}
+      משלוחים {{totals.deliveries}}
+    </h4>
+    <h4>
+      בדרך {{totals.onTheWay}}
+    </h4>
+    <h4>
+      מתנדבים {{totals.helpers}}
+    </h4>
+    <h4>
+      משפחות באירוע {{totals.familiesInEvent}}
+    </h4>
+    <h4>
+      משפחות {{totals.totalFamilies}}
     </h4>
     <div style="margin-bottom:15px">
       <button mat-raised-button (click)="previous()">

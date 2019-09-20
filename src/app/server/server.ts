@@ -25,7 +25,7 @@ serverInit().then(async (dataSource) => {
             res.send(fs.readFileSync(index).toString());
         }
         else {
-            res.send('No Result' + fs.realpathSync(index));
+            res.send('No Result' + index);
 
         }
     });
